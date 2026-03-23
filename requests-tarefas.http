@@ -1,0 +1,11 @@
+GET http://localhost:3000/tarefas
+
+###
+
+POST http://localhost:3000/tarefas
+Content-Type: application/json
+
+{
+    "id": 4,
+    "descricao": "Ler meu livro"
+}

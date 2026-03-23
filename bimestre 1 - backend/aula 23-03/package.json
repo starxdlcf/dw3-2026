@@ -1,0 +1,16 @@
+{
+  "name": "aula-23-03",
+  "version": "1.0.0",
+  "main": "server.js",
+  "scripts": {
+    "dev": "node --watch server-tarefas.js",
+    "start": "node server-tarefas.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "fastify": "^5.8.4"
+  }
+}
