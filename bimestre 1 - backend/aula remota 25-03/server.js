@@ -34,10 +34,6 @@ const start = async () => {
   
 }
 
-server.get('/tarefas', async (request, reply) => {
-    return reply.send(tarefas)
-})
-
 // C: Criar uma nova tarefa (CREATE)
 server.post('/tarefas', async (request, reply) => {
     // É no body (corpo) que moram os objetos empacotados pelo front end
@@ -47,10 +43,16 @@ server.post('/tarefas', async (request, reply) => {
     const novoId = tarefas.length > 0 ? tarefas[tarefas.length - 1].id + 1 : 1
     const novaTarefa = { id: novoId, ...tarefa }
 
-    tarefas.push(novaTarefa)
+    if (novaTarefa.descricao !== undefined && novaTarefa.descricao !== null && novaTarefa.descricao !== " "){
+        tarefas.push(novaTarefa)
+        return reply.status(201).send(novaTarefa)
+    } else {
+        return reply.status(404).send({ status: 'error', message: 'Descrição não encontrada' })
+    }
+
+    
 
     // Devolver Status 201 é a prática mundial padrão indicando "Recurso Criado com Sucesso"
-    return reply.status(201).send(novaTarefa)
 })
 
 server.get('/tarefas/:id', async (request, reply) => {
@@ -74,15 +76,21 @@ server.get('/tarefas', async (request, reply) => {
     // Capturamos o valor do parâmetro de consulta 'concluido' da URL
     // Por exemplo, se a URL for /tarefas?concluido=false, então concluido será 'false' (string)
     const concluido = request.query.concluido
+    const busca = request.query.busca
+    let resultado = tarefas
 
     // Se o parâmetro 'concluido' estiver presente na query string, filtramos as tarefas com base nesse valor.
     if (concluido !== undefined) {
-        const tarefasFiltradas = tarefas.filter(t => String(t.concluido) === concluido)
-        return reply.send(tarefasFiltradas)
+        let resultado = resultado.filter(t => String(t.concluido) === concluido)
     }
 
+    if (busca) {
+        let resultado = resultado.filter(t => t.descricao.toLowerCase().includes(busca.toLowerCase()))
+    }
+    
+
     // Se o parâmetro 'concluido' não estiver presente, retornamos a lista completa de tarefas
-    return reply.send(tarefas)
+    return reply.send(resultado)
 })
 
 server.patch('/tarefas/:id', async (request, reply) => {
@@ -135,6 +143,37 @@ server.setNotFoundHandler((request, reply) => {
 
 })
 
+server.patch('/tarefas/:id/concluir', async (request, reply) => {
+    const idtarefa = request.params.id
+    const idtarefanum = Number(idtarefa)
+
+    const index = tarefas.findIndex(t => t.id === idtarefanum)
+
+    if (index == 1){
+        return reply.status(404).send({ status: 'error', message: 'Index 1' })
+    } else {
+        tarefas[index].concluido = !tarefas[index].concluido
+
+        reply.send(tarefas)
+    }
+
+
+})
+
+server.get('/tarefas/resumo', async (request, reply) => {
+  const total = tarefas.length
+  const concluidas = tarefas.filter(t => t.concluido).length
+  const pendentes = total - concluidas
+
+  const relatorio = [
+    {"total" : total},
+    {"concluídas" : concluidas},
+    {"pendentes" : pendentes}
+  ]
+
+  return reply.send(relatorio)
+  
+})
 
 
 // Chamamos a função start para iniciar o servidor
