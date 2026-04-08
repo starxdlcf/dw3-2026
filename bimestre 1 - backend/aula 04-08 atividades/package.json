@@ -1,0 +1,17 @@
+{
+  "name": "aula-04-08-atividades",
+  "version": "1.0.0",
+  "main": "server4.js",
+  "scripts": {
+    "dev": "node --watch server4.js",
+    "start": "node server4.js"
+  },
+  "keywords": [],
+  "author": "",
+  "license": "ISC",
+  "description": "",
+  "dependencies": {
+    "@fastify/cors": "^11.2.0",
+    "fastify": "^5.8.4"
+  }
+}
