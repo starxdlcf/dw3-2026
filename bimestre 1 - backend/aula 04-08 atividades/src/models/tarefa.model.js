@@ -29,10 +29,9 @@ export async function listar(opcoes) {
 // Função para criar uma nova tarefa. Ela recebe a descrição da tarefa como parâmetro e retorna a tarefa criada.
 export async function criar(descricao) {
   console.log("Model: criar chamado")
-  const { busca, concluido } = opcoes
 
   if (!descricao || descricao.trim() === '') {
-    return reply.status(400).send({
+    return({
       status: 'error',
       message: 'A descrição da tarefa é obrigatória'
     })
@@ -42,7 +41,7 @@ export async function criar(descricao) {
 
   tarefas.push(novaTarefa)
 
-  return resultado
+  return(novaTarefa)
 }
 
 // Função para obter os detalhes de uma tarefa específica. Ela recebe o ID da tarefa como parâmetro e retorna a tarefa correspondente.
@@ -51,10 +50,10 @@ export async function buscarPorId(id) {
 
   const tarefa = tarefas.find(t => t.id === id)
   if (!tarefa) {
-    return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
+    return({ status: 'error', message: 'Tarefa não encontrada' })
   }
 
-  return resultado
+  return tarefa
 }
 
 // Função para atualizar uma tarefa existente. Ela recebe o ID da tarefa e os dados atualizados como parâmetros, e retorna a tarefa atualizada.
@@ -63,12 +62,11 @@ export async function atualizar(id, dadosAtualizados) {
 
   const index = tarefas.findIndex(t => t.id === id)
   if (index === -1) {
-    return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
+    return({ status: 'error', message: 'Tarefa não encontrada' })
   }
-  const tarefaAtualizada = request.body
-  tarefas[index] = { ...tarefas[index], ...tarefaAtualizada, id }
+  tarefas[index] = { ...tarefas[index], ...dadosAtualizados, id }
 
-  return resultado
+  return(tarefas[index])
 }
 
 // Função para alternar o status de conclusão de uma tarefa. Ela recebe o ID da tarefa como parâmetro.
@@ -78,7 +76,7 @@ export async function alternarConcluido(id) {
   const index = tarefas.findIndex(t => t.id === id)
 
   if (index === -1) {
-    return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
+    return({ status: 'error', message: 'Tarefa não encontrada' })
   }
 
   tarefas[index].concluido = !tarefas[index].concluido
@@ -89,23 +87,39 @@ export async function alternarConcluido(id) {
 // Função para remover uma tarefa. Ela recebe o ID da tarefa como parâmetro.
 export async function remover(id) {
   console.log("Model: remover chamado")
+  
+  const index = tarefas.findIndex(t => t.id === id)
 
-  return(tarefas[index])
+  if (index === -1) {
+    throw new Error('Tarefa não encontrada') 
+  }
+
+  tarefas.splice(index, 1)
+  return { message: 'Tarefa removida com sucesso' }
 }
 
 // Função para obter o resumo das tarefas (quantas estão pendentes, quantas estão concluídas).
-export async function obterResumo() {
+export async function resumo() {
   console.log("Model: obterResumo chamado")
 
   const total = tarefas.length
   const concluidas = tarefas.filter(t => t.concluido).length
   const pendentes = total - concluidas
 
-  return reply.send({
+  return({
     total,
     concluidas,
     pendentes
   })
 
-  return resultado
+}
+
+export async function listarPendentes(filtro) {
+  console.log("Model: listar chamado")
+
+  if (tarefas.concluido === filtro) {
+    return tarefas.filter(t => !t.concluido)
+  } else{
+    return("Erro")
+  }
 }

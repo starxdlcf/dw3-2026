@@ -1,69 +1,59 @@
+
 @url = http://localhost:3000
 
-### Trazer Tudo O Que Existe:
+### Busca todas as tarefas
 GET {{url}}/tarefas
 
 
-### Criar uma nova tarefa
-POST {{url}}/tarefas 
+### Busca uma tarefa específica por ID
+GET {{url}}/tarefas/1
+
+
+### Criando uma nova tarefa
+POST {{url}}/tarefas
 Content-Type: application/json
 
 {
-  "descricao": "Estudar Física",
-  "concluido": false
+    "id": 4,
+    "descricao": "Tarefa 4",
+    "concluido": false
 }
 
-### Buscar detalhes de uma tarefa específica pelo ID
-GET http://localhost:3000/tarefas/1
 
-### Testar a rota de listagem filtrando apenas tarefas não concluídas:
-GET http://localhost:3000/tarefas?concluido=false
-
-### Atualizar a descrição e marcar como concluída de uma tarefa específica pelo ID
-PATCH http://localhost:3000/tarefas/1
+### Atualizando parcialmente uma tarefa (PATCH)
+PATCH {{url}}/tarefas/1
 Content-Type: application/json
 
 {
-    "descricao": "Fazer compras no mercado noturno e limpar o pátio",
+    "descricao": "Fazer compras no mercado",
     "concluido": true
 }
 
-### Excluir uma tarefa específica pelo ID
-DELETE http://localhost:3000/tarefas/1
 
-### Testando rota que não existe para acionar nosso Handler Customizado
-GET http://localhost:3000/batata-frita
+### Excluindo uma tarefa
+DELETE {{url}}/tarefas/1
 
 
-######### TAREFA 1
-
-### Buscar por descrição
-GET http://localhost:3000/tarefas?busca=compras
-
-### Buscar apenas concluídas
-GET http://localhost:3000/tarefas?concluido=true
-
-### Busca combinada (descrição + status)
-GET http://localhost:3000/tarefas?busca=estudar&concluido=false
+### Buscando tarefas por Query String (Filtro)
+GET {{url}}/tarefas?busca=estudar
 
 
-######## TAREFA 2 
+### Alternar o status da tarefa de ID 1
+PATCH {{url}}/tarefas/3/concluir
+
+
+### Resumo/Estatísticas das tarefas
+GET {{url}}/tarefas/resumo
+
+
+### Forçando erro 404 no NotFoundHandler
+GET {{url}}/batata-frita
+
 
 ### Testar validação (enviando sem descrição)
-POST http://localhost:3000/tarefas
+POST {{url}}/tarefas
 Content-Type: application/json
 
 {
     "concluido": false
 }
-
-####### TAREFA 3 
-
-### Alternar o status da tarefa de ID 1
-PATCH http://localhost:3000/tarefas/1/concluir
-
-
-####### TAREFA 4 
-
-### Ver resumo estatístico
-GET http://localhost:3000/tarefas/resumo

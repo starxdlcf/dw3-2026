@@ -1,4 +1,4 @@
-  import { listar } from '../models/tarefa.model.js'
+  import { listar, criar, resumo, buscarPorId, atualizar, alternarConcluido, remover } from '../models/tarefa.model.js'  
 
 
   // Processa requisições da rota `GET /tarefas`
@@ -29,7 +29,7 @@
     export async function obterResumo(request, reply) { 
       console.log("Controller obterResumo buscada")
 
-      const resultado = await obterResumo()
+      const resultado = await resumo()
       
       return reply.send(resultado)
 
@@ -64,8 +64,9 @@
       console.log("Controller concluirTarefa buscada")
 
       const id = Number(request.params.id)
+      const tarefaAtualizada = await alternarConcluido(id)
       
-      return reply.send(tarefas[index])
+      return reply.send(tarefaAtualizada)
     }
 
     // Processa requisições da rota `DELETE /tarefas/:id`
@@ -73,12 +74,15 @@
       console.log("Controller removerTarefa buscada")
 
       const id = Number(request.params.id)
-      const index = tarefas.findIndex(t => t.id === id)
+      const resultado = await remover(id)
 
-      if (index === -1) {
-        return reply.status(404).send({ status: 'error', message: 'Tarefa não encontrada' })
-      }
+      return reply.send(resultado)
+    }
 
-      tarefas.splice(index, 1)
-      return reply.status(204).send()
+    export async function listarTarefasPendentes(reply) {
+      console.log("Controller listarTarefasPendentes buscada")
+
+      const resultado = await listarPendentes({ concluido: false })
+
+      return reply.send(resultado)
     }

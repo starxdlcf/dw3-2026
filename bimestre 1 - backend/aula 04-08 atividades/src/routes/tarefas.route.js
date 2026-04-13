@@ -1,4 +1,4 @@
-import { listarTarefas } from '../controllers/tarefa.controler.js'
+import { listarTarefas, listarTarefasPendentes } from '../controllers/tarefa.controler.js'
 import { criarTarefa } from '../controllers/tarefa.controler.js'
 import { obterResumo } from '../controllers/tarefa.controler.js'
 import { obterTarefa } from '../controllers/tarefa.controler.js'
@@ -43,5 +43,10 @@ export default async function tarefaRoutes(server, options) {
   server.delete('/tarefas/:id', async (request, reply) => {
     console.log("Rota DELETE /tarefas/:id buscada")
     removerTarefa(request, reply)
+  })
+
+  server.get('/tarefas/pendentes', async (request, reply) => {
+    console.log("Rota GET /tarefas/pendentes buscada")
+    listarTarefasPendentes(request, reply)
   })
 }
