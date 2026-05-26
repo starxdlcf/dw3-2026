@@ -1,0 +1,15 @@
+
+# 1. O que é um *Fat Model* e por que ele é considerado um problema em aplicações que tendem a crescer?
+O termo Fat Model descreve o antipadrão em que a camada de dados acumula responsabilidades excessivas, como validações, cálculos complexos e regras de negócio. Em aplicações que se expandem, essa centralização torna-se um problema grave porque gera arquivos extensos e de difícil manutenção, além de impedir a execução de testes unitários isolados, visto que as regras lógicas ficam fortemente acopladas aos mecanismos de persistência de dados.
+
+# 2. Por que o *TarefaService* recebe o *TarefaRepository* via constructor em vez de criá-lo internamente com *new TarefaRepository()*? Que vantagem isso traz?
+O TarefaService recebe o TarefaRepository pelo construtor para implementar a Injeção de Dependência, evitando o acoplamento forte que ocorreria se a classe usasse o operador new internamente. A principal vantagem dessa abordagem é o desacoplamento entre as camadas, o que facilita a criação de testes de software por meio de dados simulados (mocks) e garante que mudanças futuras na estrutura do repositório não impactem as regras de negócio do serviço.
+
+# 3. O *server.js* foi chamado de Composition Root. Em suas próprias palavras, qual é o papel desse arquivo na nova arquitetura?
+Como Composition Root, o arquivo server.js funciona como o ponto central de inicialização do sistema, sendo o único local encarregado de instanciar as classes e interconectar o quebra-cabeça de dependências da aplicação. Sua função é garantir que todos os componentes — do repositório de dados ao controlador — sejam criados na ordem correta e vinculados às suas respectivas rotas para que o servidor funcione de maneira integrada.
+
+# 4. Se você precisasse trocar o armazenamento em memória por um banco de dados PostgreSQL, quais arquivos você precisaria criar ou modificar com a arquitetura atual? Justifique.
+Para realizar a migração para o PostgreSQL, seria necessário modificar apenas o arquivo tarefa.repository.js, para substituir o vetor em memória por instruções SQL ou métodos de um ORM, e o server.js, para configurar a string de conexão com o novo banco de dados. Essa mudança restrita é justificada pela eficiência da arquitetura MVCS, que isola a persistência de dados e permite alterar a infraestrutura do código sem a necessidade de modificar as rotas, os controladores ou as regras de negócio.
+
+# 5. Observe o método *alternarConcluido* no *TarefaService*: Por que essa lógica está no Service e não no Repository?
+O método alternarConcluido está localizado no Service porque ele gerencia uma regra de negócio que envolve tomada de decisão, como validar se a tarefa existe e inverter seu estado booleano antes de autorizar a atualização. Pelas regras do modelo, o repositório deve ser limitado a executar de forma automatizada as operações básicas de banco de dados (CRUD), deixando a coordenação lógica e a inteligência dos processos sob responsabilidade da camada de serviço.
