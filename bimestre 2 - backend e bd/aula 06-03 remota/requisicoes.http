@@ -1,0 +1,90 @@
+
+@url = http://localhost:3000
+
+GET {{url}}/laboratorio/tarefas-db/concluidas
+
+###
+
+GET {{url}}/laboratorio/tarefas-db
+
+###
+
+POST {{url}}/laboratorio/tarefas-db
+Content-Type: application/json
+
+{
+  "descricao": "Teste 1 de Entradas no BD",
+  "concluido": "false"
+}
+###
+
+POST {{url}}/laboratorio/tarefas-db
+Content-Type: application/json
+
+{
+  "descricao": "Funcionou a entrada 2 no BD",
+  "concluido": "true"
+}
+###
+
+POST {{url}}/laboratorio/tarefas-db
+Content-Type: application/json
+
+{
+  "descricao": "Terceira tarefa para o exercício",
+  "concluido": "false"
+}
+###
+
+GET {{url}}/tarefas
+
+###
+
+# Buscando tarefas por Query String (Filtro)
+GET {{url}}/tarefas?busca=estudar
+
+###
+
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+  "id": 4,
+  "descricao": "Tarefa 4",
+  "concluido": false
+}
+
+###
+
+GET {{url}}/tarefas/1
+
+###
+
+PATCH {{url}}/tarefas/1
+Content-Type: application/json
+
+{
+  "descricao": "Fazer compras no mercado",
+  "concluido": true
+}
+
+###
+
+PATCH {{url}}/tarefas/1/concluir
+
+###
+
+GET {{url}}/tarefas/resumo
+
+###
+
+GET {{url}}/tarefas/pendentes
+
+###
+
+DELETE {{url}}/tarefas/1
+
+###
+
+# Forçando erro 404 no NotFoundHandler
+GET {{url}}/batata-frita
