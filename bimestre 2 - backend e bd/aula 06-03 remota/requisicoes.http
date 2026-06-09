@@ -1,6 +1,34 @@
 
 @url = http://localhost:3000
 
+
+DELETE <http://localhost:3000/tarefas/1>
+
+###
+
+
+PATCH <http://localhost:3000/tarefas/1>
+Content-Type: application/json
+
+{
+  "descricao": "Descrição atualizada direto no PostgreSQL"
+}
+
+###
+
+GET <http://localhost:3000/tarefas/1>
+
+###
+
+POST <http://localhost:3000/tarefas>
+Content-Type: application/json
+
+{
+  "descricao": "Salvar pela API real usando Repository com SQL"
+}
+
+###
+
 GET {{url}}/laboratorio/tarefas-db/concluidas
 
 ###

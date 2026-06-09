@@ -7,24 +7,12 @@ class TarefaService {
   }
 
   async listar(opcoes) {
-    console.log("Service: listar chamado")
-    const { busca, concluido } = opciones
+  console.log("Service: listar chamado")
+  const { busca, concluido } = opcoes || {}
 
-    let resultado = await this.repository.buscarTodos()
-
-    if (busca) {
-      resultado = resultado.filter(t =>
-        t.descricao.toLowerCase().includes(busca.toLowerCase())
-      )
-    }
-
-    if (concluido !== undefined) {
-      const concluidoBool = concluido === 'true'
-      resultado = resultado.filter(t => t.concluido === concluidoBool)
-    }
-
-    return resultado
-  }
+  // Delegamos toda a filtragem para o banco de dados através do Repository
+  return await this.repository.buscarTodos({ busca, concluido })
+}
 
   async criar(descricao) {
     console.log("Service: criar chamado")
@@ -95,6 +83,15 @@ class TarefaService {
     console.log("Service: listarPendentes chamado")
     return this.repository.buscarPendentes()
   }
+
+  async obterResumo() {
+  console.log("Service: obterResumo chamado")
+  
+  // Busca o resumo calculado de forma performática pelo PostgreSQL
+  const resumo = await this.repository.obterContagemResumo()
+  
+  return resumo
+} 
 }
 
 export default TarefaService
