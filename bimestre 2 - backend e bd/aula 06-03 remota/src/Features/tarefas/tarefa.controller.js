@@ -14,8 +14,8 @@ class TarefaController {
 
   async criarTarefa(request, reply) {
     console.log("Controller: criarTarefa chamado")
-    const { descricao } = request.body
-    const novaTarefa = await this.service.criar(descricao)
+    const { descricao, projetoId } = request.body
+    const novaTarefa = await this.service.criar({ descricao, projetoId })
     return reply.status(201).send(novaTarefa)
   }
 

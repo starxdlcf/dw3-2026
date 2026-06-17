@@ -15,20 +15,23 @@ class TarefaService {
 }
 
   async criar(descricao) {
+    console.log("descricao recebida:", descricao)
     console.log("Service: criar chamado")
     
-    if (!descricao || descricao.trim() === '') {
+    if (!descricao || descricao.descricao.trim() === '') {
       throw new AppError('A descrição da tarefa é obrigatória', 400)
     }
 
-    const todas = await this.repository.buscarTodos()
-    const jaExiste = todas.some(t => t.descricao.toLowerCase() === descricao.toLowerCase().trim())
-    
-    if (jaExiste) {
-      throw new AppError('Já existe uma tarefa com essa descrição', 400)
+    const todas = await this.repository.buscarPorProjetoId(descricao.idProjeto)
+    if (todas) {
+      throw new AppError('Já existe um projeto com esse ID', 404)
     }
 
-    return await this.repository.salvar({ descricao: descricao.trim(), concluido: false })
+    return this.repository.salvar({
+      descricao: descricao.descricao,
+      concluido: false,
+      projetoId: descricao.projetoId
+    })
   }
 
   async buscarPorId(id) {

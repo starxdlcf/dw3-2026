@@ -10,7 +10,7 @@ server.register(cors, {
   methods: ['GET', 'POST', 'PATCH', 'DELETE', 'OPTIONS']
 })
 
-server.register(tarefaRoutes, { prefix: '/tarefas' })
+server.register(tarefaRoutes)
 
 server.setNotFoundHandler((request, reply) => {
   reply.code(404).send({
@@ -58,6 +58,8 @@ server.get('/laboratorio/tarefas-db/concluidas', async (request, reply) => {
 
 server.post('/laboratorio/tarefas-db', async (request, reply) => {
   const { descricao, concluido } = request.body
+
+  console.log("Recebido POST /laboratorio/tarefas-db com dados:", { descricao, concluido })
 
   if (!descricao || descricao.trim() === '') {
     return reply.status(400).send({

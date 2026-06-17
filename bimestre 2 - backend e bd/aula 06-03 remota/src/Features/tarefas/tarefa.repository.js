@@ -11,13 +11,20 @@ class TarefaRepository {
     ]
   }
 
-  async buscarTodos({ busca, concluido } = {}) {
-  console.log("Repository: buscarTodos chamado com filtros:", { busca, concluido })
+  async buscarTodos({busca = null, concluido = undefined } = {}) {
+  console.log("Repository: buscarTodos chamado com filtros:")
   
   let query = `
-    SELECT id, descricao, concluido, criada_em
-    FROM tarefas
-    WHERE 1=1
+    SELECT
+      t.id,
+      t.descricao,
+      t.concluido,
+      t.criada_em,
+      t.projeto_id,
+      p.nome AS projeto_nome
+    FROM tarefas t
+    LEFT JOIN projetos p
+      ON p.id = t.projeto_id
   `
   const valores = []
   let contador = 1
@@ -54,14 +61,25 @@ class TarefaRepository {
     return resultado.rows[0] ?? null
   }
 
+  async buscarPorProjetoId(projetoId) {
+    console.log("Repository: buscarPorProjetoId chamado")
+    const resultado = await client.query(`
+      SELECT id, descricao, concluido, criada_em, projeto_id
+      FROM tarefas
+      WHERE projeto_id = $1
+      ORDER BY id
+    `, [projetoId])
+    return resultado.rows[0] ?? null
+  }
+
  async salvar(tarefa) {
   const resultado = await client.query(
     `
-      INSERT INTO tarefas (descricao, concluido)
-      VALUES ($1, $2)
-      RETURNING id, descricao, concluido, criada_em
+      INSERT INTO tarefas (descricao, concluido, projeto_id)
+      VALUES ($1, $2, $3)
+      RETURNING id, descricao, concluido, criada_em, projeto_id
     `,
-    [tarefa.descricao, tarefa.concluido]
+    [tarefa.descricao, tarefa.concluido, tarefa.projetoId]
   )
 
   return resultado.rows[0]

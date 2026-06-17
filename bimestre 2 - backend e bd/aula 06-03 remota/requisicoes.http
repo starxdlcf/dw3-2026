@@ -1,13 +1,27 @@
 
 @url = http://localhost:3000
 
+GET http://localhost:3000/tarefas
 
-DELETE <http://localhost:3000/tarefas/1>
+### roteiro 13 - primeiro post com relacionamento entre tarefas e projetos
+
+POST {{url}}/tarefas
+Content-Type: application/json
+
+{
+  "descricao": "Criar integração entre projetos e tarefas",
+  "concluido": false,
+  "projetoId": 2
+}
+
+###
+
+DELETE {{url}}/tarefas/1
 
 ###
 
 
-PATCH <http://localhost:3000/tarefas/1>
+PATCH {{url}}/tarefas/1>
 Content-Type: application/json
 
 {
@@ -16,11 +30,11 @@ Content-Type: application/json
 
 ###
 
-GET <http://localhost:3000/tarefas/1>
+GET {{url}}/tarefas/1>
 
 ###
 
-POST <http://localhost:3000/tarefas>
+POST {{url}}/tarefas
 Content-Type: application/json
 
 {
